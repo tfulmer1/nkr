@@ -73,7 +73,7 @@ def find_nested_key_values(target_dictionary, requested_key):
                         list_values = list(find_nested_key_values(target_dictionary[key][i], requested_key))
                         if len(list_values) > 0:
                             for value in list_values:
-                                if not (isinstance(value, list) and len(value) == 0)
+                                if not (isinstance(value, list) and len(value) == 0):
                                     values.append(value)
                 except KeyError:
                     pass
