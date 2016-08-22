@@ -11,12 +11,12 @@ The find_nested_key_values() function is a generator that will yield a list of a
 
 def find_nested_key_value(target_dictionary, requested_key):
     try: #confirm the input is a dictionary
-        target_dict_keys = target_dictionary.keys()
+        target_dictionary.keys()
     except AttributeError:
         return None
     except Exception:
         raise
-    for key in target_dict_keys:
+    for key in target_dictionary.keys():
             if key == requested_key: #Check if the current key being tested is our value and bubble it up
                 return target_dictionary[key]
             try: #If this isn't our key, is its value a dictionary? If so, check all those keys
@@ -59,20 +59,22 @@ def find_nested_key_values(target_dictionary, requested_key):
                     dict_values = list(find_nested_key_values(target_dictionary[key], requested_key))
                     if len(dict_values) > 0:
                         for value in dict_values:
-                            values.append(value)
+                            if not (isinstance(value, list) and len(value) == 0):
+                                values.append(value)
                 except AttributeError:
                     pass
                 except Exception:
                     raise
                 try: #if not our key and not a dictionary, is the value a list? If so, check each index for additional dictionaries and check those keys for values 
-                    target_dictionary[key][0]
+                    assert isinstance(target_dictionary[key], list)
                     i = len(target_dictionary[key])
                     while i > 0:
                         i -= 1
                         list_values = list(find_nested_key_values(target_dictionary[key][i], requested_key))
                         if len(list_values) > 0:
                             for value in list_values:
-                                values.append(value)
+                                if not (isinstance(value, list) and len(value) == 0)
+                                    values.append(value)
                 except KeyError:
                     pass
                 except IndexError:
@@ -81,10 +83,12 @@ def find_nested_key_values(target_dictionary, requested_key):
                     pass
                 except TypeError:
                     pass
+                except AssertionError:
+                    pass
                 except Exception:
                     raise
     except AttributeError:
-        yield None
+        yield []
     except Exception:
         raise
     for value in values: #Yield up all the valid returns
