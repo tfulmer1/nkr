@@ -87,9 +87,11 @@ def find_nested_key_values(target_dictionary, requested_key):
                     pass
                 except Exception:
                     raise
+
     except AttributeError:
         yield []
     except Exception:
         raise
+
     for value in values: #Yield up all the valid returns
         yield value
